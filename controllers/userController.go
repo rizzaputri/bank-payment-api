@@ -81,7 +81,7 @@ func SignUp(c *gin.Context) {
 	})
 }
 
-func Login(c *gin.Context) {
+func LogIn(c *gin.Context) {
 	// Request body
 	var body struct {
 		Email    string
@@ -146,5 +146,45 @@ func Login(c *gin.Context) {
 	// Response
 	c.JSON(http.StatusOK, gin.H{
 		"token": user.Token,
+	})
+}
+
+func LogOut(c *gin.Context) {
+	// Retrieve the user from the context
+	user, exists := c.Get("user")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not found"})
+		return
+	}
+
+	// Create User object
+	u, ok := user.(models.User)
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to cast user object"})
+		return
+	}
+
+	// Start a new transaction
+	err := initializers.DB.Transaction(func(tx *gorm.DB) error {
+		// Delete User's token
+		u.Token = ""
+		if err := tx.Save(&u).Error; err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	// Handle transaction errors
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Failed to log out User",
+		})
+		return
+	}
+
+	// Response
+	c.JSON(http.StatusOK, gin.H{
+		"message": "User successfully logged out",
 	})
 }

@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"test-mnc/controllers"
 	"test-mnc/initializers"
+	"test-mnc/middlewares"
 )
 
 func init() {
@@ -16,7 +17,9 @@ func main() {
 	r := gin.Default()
 
 	r.POST("/api/v1/auth/register", controllers.SignUp)
-	r.POST("/api/v1/auth/login", controllers.Login)
+	r.POST("/api/v1/auth/login", controllers.LogIn)
+	r.POST("/api/v1/payments", middlewares.RequireAuth, controllers.CreatePayment)
+	r.PUT("/api/v1/auth/logout", middlewares.RequireToken, controllers.LogOut)
 
 	err := r.Run()
 	if err != nil {

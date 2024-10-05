@@ -12,4 +12,9 @@ func SyncDatabase() {
 	if err != nil {
 		panic("Failed to migrate Customer database: " + err.Error())
 	}
+
+	err = DB.AutoMigrate(&models.Payment{})
+	if err != nil {
+		panic("Failed to migrate Payment database: " + err.Error())
+	}
 }
