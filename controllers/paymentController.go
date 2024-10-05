@@ -82,21 +82,3 @@ func CreatePayment(c *gin.Context) {
 			"last_name":  customer.LastName,
 		}})
 }
-
-func GetPayment(c *gin.Context) {
-	var payments []models.Payment
-
-	// Query all payments from the database
-	result := initializers.DB.Preload("Customer").Find(&payments)
-	if result.Error != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Failed to retrieve payments",
-		})
-		return
-	}
-
-	// Response with the list of payments
-	c.JSON(http.StatusOK, gin.H{
-		"payments": payments,
-	})
-}

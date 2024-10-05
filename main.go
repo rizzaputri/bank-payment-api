@@ -19,7 +19,7 @@ func main() {
 	r.POST("/api/v1/auth/register", controllers.SignUp)
 	r.POST("/api/v1/auth/login", controllers.LogIn)
 	r.POST("/api/v1/payments", middlewares.RequireAuth, controllers.CreatePayment)
-	r.GET("/api/v1/payments", middlewares.RequireAuth, controllers.GetPayment)
+	r.GET("/api/v1/histories", middlewares.RequireAuth, controllers.GetHistory)
 	r.PUT("/api/v1/auth/logout", middlewares.RequireToken, controllers.LogOut)
 
 	err := r.Run()
