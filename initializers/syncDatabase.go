@@ -17,4 +17,9 @@ func SyncDatabase() {
 	if err != nil {
 		panic("Failed to migrate Payment database: " + err.Error())
 	}
+
+	err = DB.AutoMigrate(&models.History{})
+	if err != nil {
+		panic("Failed to migrate History database: " + err.Error())
+	}
 }

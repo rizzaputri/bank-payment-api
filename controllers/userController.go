@@ -132,6 +132,26 @@ func LogIn(c *gin.Context) {
 			return result.Error
 		}
 
+		// Find Customer
+		var customer models.Customer
+		result = tx.First(&customer, "user_id = ?", user.ID)
+		if result.Error != nil {
+			return result.Error
+		}
+
+		// Log History
+		history := models.History{
+			HistoryID:  uuid.New(),
+			Date:       time.Now(),
+			Activity:   "User logged in",
+			CustomerID: customer.ID,
+			Customer:   customer,
+		}
+		result = tx.Create(&history)
+		if result.Error != nil {
+			return result.Error
+		}
+
 		return nil
 	})
 

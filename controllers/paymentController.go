@@ -48,6 +48,19 @@ func CreatePayment(c *gin.Context) {
 			return result.Error
 		}
 
+		// Log History
+		history := models.History{
+			HistoryID:  uuid.New(),
+			Date:       payment.PaymentDate,
+			Activity:   "Successful payment",
+			CustomerID: customer.ID,
+			Customer:   customer,
+		}
+		result = tx.Create(&history)
+		if result.Error != nil {
+			return result.Error
+		}
+
 		return nil
 	})
 
@@ -68,4 +81,22 @@ func CreatePayment(c *gin.Context) {
 			"first_name": customer.FirstName,
 			"last_name":  customer.LastName,
 		}})
+}
+
+func GetPayment(c *gin.Context) {
+	var payments []models.Payment
+
+	// Query all payments from the database
+	result := initializers.DB.Preload("Customer").Find(&payments)
+	if result.Error != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Failed to retrieve payments",
+		})
+		return
+	}
+
+	// Response with the list of payments
+	c.JSON(http.StatusOK, gin.H{
+		"payments": payments,
+	})
 }
