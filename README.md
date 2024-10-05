@@ -15,6 +15,10 @@ logging with models such as User, Customer, Payment, and History.
 - Golang installed on your machine.
 - A MySQL database instance running.
 - A .env file to provide environment variables, such as the database connection string and JWT secret.
+ 
+``
+Note: final project in feature-history branch
+``
 
 ## Getting Started
 - Setup
