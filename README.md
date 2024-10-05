@@ -17,7 +17,7 @@ logging with models such as User, Customer, Payment, and History.
 - A .env file to provide environment variables, such as the database connection string and JWT secret.
  
 ``
-Note: final project in feature-history branch
+Note: final project in final branch
 ``
 
 ## Getting Started
